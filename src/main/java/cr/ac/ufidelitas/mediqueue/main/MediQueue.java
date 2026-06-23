@@ -1,5 +1,5 @@
 
-package cr.ac.ufidelitas.mediqueue;
+package cr.ac.ufidelitas.mediqueue.main;
 
 import java.util.Scanner;
 
