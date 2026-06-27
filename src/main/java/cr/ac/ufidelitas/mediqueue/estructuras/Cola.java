@@ -19,29 +19,28 @@ public class Cola<T> {
     public void encolar(T dato) {
         Nodo<T> nuevo = new Nodo<>(dato);
 
-        if (estaVacia()) {
-            frente = nuevo;
-            fin = nuevo;
+        if (fin == null) {
+            frente = fin = nuevo;
         } else {
-            fin.siguiente = nuevo;
+            fin.setSiguiente(nuevo);
             fin = nuevo;
         }
     }
 
     // Sacar (dequeue)
     public T desencolar() {
-        if (estaVacia()) {
-            return null;
-        }
+        if (frente == null) return null;
 
-        T dato = frente.dato;
-        frente = frente.siguiente;
+        T dato = frente.getDato();
+        frente = frente.getSiguiente();
 
-        if (frente == null) {
-            fin = null;
-        }
+        if (frente == null) fin = null;
 
         return dato;
+    }
+
+    public T verFrente() {
+        return (frente != null) ? frente.getDato() : null;
     }
 
     public boolean estaVacia() {
@@ -54,6 +53,6 @@ public class Cola<T> {
         while (actual != null) {
             System.out.println(actual.dato);
             actual = actual.siguiente;
-        }
+}
     }
 }
