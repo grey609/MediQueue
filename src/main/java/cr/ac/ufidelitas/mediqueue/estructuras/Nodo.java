@@ -7,8 +7,8 @@ package cr.ac.ufidelitas.mediqueue.estructuras;
  */
 public class Nodo<T> {
 
-    T dato;
-    Nodo<T> siguiente;
+    private T dato;
+    private Nodo<T> siguiente;
 
     public Nodo(T dato) {
         this.dato = dato;
@@ -17,10 +17,6 @@ public class Nodo<T> {
 
     public T getDato() {
         return dato;
-    }
-
-    public void setDato(T dato) {
-        this.dato = dato;
     }
 
     public Nodo<T> getSiguiente() {

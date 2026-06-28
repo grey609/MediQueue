@@ -7,18 +7,11 @@ import java.io.FileWriter;
 
 public class Serializacion {
 
-    private final Gson gson;
+    private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-    public Serializacion() {
-        gson = new GsonBuilder()
-                .setPrettyPrinting()
-                .disableHtmlEscaping()
-                .create();
-    }
-
-    public void guardar(Object objeto, String archivo) {
+    public void guardar(Object obj, String archivo) {
         try (FileWriter writer = new FileWriter(archivo)) {
-            gson.toJson(objeto, writer);
+            gson.toJson(obj, writer);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -28,7 +21,6 @@ public class Serializacion {
         try (FileReader reader = new FileReader(archivo)) {
             return gson.fromJson(reader, clase);
         } catch (Exception e) {
-            e.printStackTrace();
             return null;
         }
     }

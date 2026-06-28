@@ -46,13 +46,5 @@ public class Cola<T> {
     public boolean estaVacia() {
         return frente == null;
     }
-
-    public void mostrar() {
-        Nodo<T> actual = frente;
-
-        while (actual != null) {
-            System.out.println(actual.dato);
-            actual = actual.siguiente;
 }
-    }
-}
+
