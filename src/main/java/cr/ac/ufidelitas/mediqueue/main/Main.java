@@ -2,6 +2,7 @@ package cr.ac.ufidelitas.mediqueue.main;
 
 import cr.ac.ufidelitas.mediqueue.modulo1.ConfigService;
 import cr.ac.ufidelitas.mediqueue.modulo1.Configuracion;
+import cr.ac.ufidelitas.mediqueue.modulo1.Sede;
 import cr.ac.ufidelitas.mediqueue.modulo2.*;
 
 import java.util.Scanner;
@@ -13,9 +14,8 @@ public class Main {
         Scanner sc = new Scanner(System.in);
 
         // =====================================================
-        // LOGIN (PARA PRUEBAS)
+        // LOGIN (COMENTADO PARA PRUEBAS)
         // =====================================================
-
         /*
         boolean acceso = false;
 
@@ -28,36 +28,58 @@ public class Main {
 
             if (Login.autenticar(usuario, password)) {
                 acceso = true;
-                System.out.println("✅ Acceso permitido");
+                System.out.println("Acceso permitido");
             } else {
-                System.out.println("❌ Credenciales incorrectas");
+                System.out.println("Credenciales incorrectas");
             }
         }
         */
 
-        System.out.println("Sistema MediQueue iniciado");
+        System.out.println(" Sistema MediQueue iniciado");
 
         // =====================================================
-        // MÓDULO 1 → CONFIGURACIÓN
+        //️ MÓDULO 1 → CONFIGURACIÓN CONTINUA → JSON
         // =====================================================
         ConfigService configService = new ConfigService();
         Configuracion config = configService.cargar();
 
         if (config == null) {
-            System.out.println("❌ No existe configuración inicial");
-            System.out.println("👉 Debes ejecutar primero el módulo 1.0");
-            return;
+
+            System.out.println(" Configuración inicial");
+
+            System.out.print("Nombre de la sede: ");
+            String nombre = sc.nextLine();
+
+            System.out.print("Cantidad de salas médicas: ");
+            int salas = sc.nextInt();
+
+            System.out.print("Cantidad de consultorios: ");
+            int consultorios = sc.nextInt();
+
+            System.out.print("Cantidad de emergencias: ");
+            int emergencias = sc.nextInt();
+            sc.nextLine(); // limpiar buffer
+
+            String[] usuarios = {"garias", "mchaves", "kartavia"};
+            String[] passwords = {"70021", "50279", "80284"};
+
+            Sede sede = new Sede(nombre, salas, consultorios, emergencias);
+            config = new Configuracion(sede, usuarios, passwords);
+
+            configService.guardar(config);
+
+            System.out.println("Configuración guardada");
         }
 
-        System.out.println("✅ Configuración cargada");
-        System.out.println("🏥 Sede: " + config.getSede().getNombre());
+        System.out.println("Configuración cargada");
+        System.out.println("Sede: " + config.getSede().getNombre());
 
         // =====================================================
-        // MÓDULO 2 → COLAS + PACIENTES
+        // MÓDULO 2 Registro de Pacientes → COLAS + PACIENTES
         // =====================================================
         GestorColas gestor = new GestorColas();
 
-        // Cargar datos existentes
+        // ✅ Cargar datos existentes
         gestor.cargarTodo();
 
         boolean salir = false;
@@ -76,7 +98,7 @@ public class Main {
             switch (opcion) {
 
                 // =====================================================
-                // REGISTRAR PACIENTE (SIN DATOS QUEMADOS)
+                // 🟢 REGISTRAR PACIENTE
                 // =====================================================
                 case 1:
 
@@ -128,7 +150,7 @@ public class Main {
 
                     if (siguiente != null) {
                         siguiente.atender();
-                        System.out.println("✅ Atendiendo:");
+                        System.out.println("✅ Atendiendo paciente:");
                         System.out.println(siguiente);
                     } else {
                         System.out.println("⚠ No hay pacientes en cola");
@@ -148,6 +170,8 @@ public class Main {
                     System.out.println("❌ Opción inválida");
             }
         }
+
+        sc.close();
     }
 }
 
