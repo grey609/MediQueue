@@ -1,31 +1,28 @@
-package cr.ac.ufidelitas.mediqueue.modulo2;
+package cr.ac.ufidelitas.mediqueue.modulo4;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
 import java.io.FileReader;
 import java.io.FileWriter;
 
-/**
- * DAO de persistencia para los tiquetes
- */
-public class TiqueteDAO {
+//DAO de salas
+public class SalasDAO {
 
     private final Gson gson;
 
     private static final String ARCHIVO =
-            "tiquetes.json";
+            "salas.json";
 
-    public TiqueteDAO() {
+    public SalasDAO() {
 
         gson = new GsonBuilder()
                 .setPrettyPrinting()
                 .create();
     }
 
-    /**
-     * Guarda la lista de tiquetes
-     */
-    public void guardar(ListaTiquetes lista) {
+    public void guardar(
+            ListaSalas lista) {
 
         try (FileWriter writer =
                      new FileWriter(ARCHIVO)) {
@@ -38,28 +35,26 @@ public class TiqueteDAO {
         }
     }
 
-    /**
-     * Carga los tiquetes desde JSON
-     */
-    public ListaTiquetes cargar() {
+    public ListaSalas cargar() {
 
         try (FileReader reader =
                      new FileReader(ARCHIVO)) {
 
-            ListaTiquetes lista =
+            ListaSalas lista =
                     gson.fromJson(
                             reader,
-                            ListaTiquetes.class);
+                            ListaSalas.class);
 
             if (lista == null) {
-                return new ListaTiquetes();
+
+                return new ListaSalas();
             }
 
             return lista;
 
         } catch (Exception e) {
 
-            return new ListaTiquetes();
+            return new ListaSalas();
         }
     }
 }

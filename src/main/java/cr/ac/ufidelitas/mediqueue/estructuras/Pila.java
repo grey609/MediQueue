@@ -1,5 +1,10 @@
 package cr.ac.ufidelitas.mediqueue.estructuras;
 
+/**
+ * Pila genérico para estructuras dinámicas
+ * @param <T>
+ */
+
 public class Pila<T> {
 
     private Nodo<T> cima;

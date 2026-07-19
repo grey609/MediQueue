@@ -1,9 +1,11 @@
 package cr.ac.ufidelitas.mediqueue.main;
 
-import cr.ac.ufidelitas.mediqueue.modulo1.ConfigService;
-import cr.ac.ufidelitas.mediqueue.modulo1.Configuracion;
-import cr.ac.ufidelitas.mediqueue.modulo1.Sede;
+import cr.ac.ufidelitas.mediqueue.modulo1.*;
 import cr.ac.ufidelitas.mediqueue.modulo2.*;
+import cr.ac.ufidelitas.mediqueue.modulo3.*;
+import cr.ac.ufidelitas.mediqueue.modulo4.*;
+import cr.ac.ufidelitas.mediqueue.modulo1.Usuario;
+import cr.ac.ufidelitas.mediqueue.modulo1.ListaUsuarios;
 
 import java.util.Scanner;
 
@@ -13,94 +15,194 @@ public class Main {
 
         Scanner sc = new Scanner(System.in);
 
-        // =====================================================
-        // LOGIN (COMENTADO PARA PRUEBAS)
-        // =====================================================
-        /*
-        boolean acceso = false;
-
-        while (!acceso) {
-            System.out.print("Usuario: ");
-            String usuario = sc.nextLine();
-
-            System.out.print("Contraseña: ");
-            String password = sc.nextLine();
-
-            if (Login.autenticar(usuario, password)) {
-                acceso = true;
-                System.out.println("Acceso permitido");
-            } else {
-                System.out.println("Credenciales incorrectas");
-            }
-        }
-        */
-
-        System.out.println(" Sistema MediQueue iniciado");
+        System.out.println("======================================");
+        System.out.println(" Sistema MediQueue - Bienvenido ");
+        System.out.println("======================================");
 
         // =====================================================
-        //️ MÓDULO 1 → CONFIGURACIÓN CONTINUA → JSON
+        // CONFIGURACIÓN
         // =====================================================
         ConfigService configService = new ConfigService();
         Configuracion config = configService.cargar();
 
         if (config == null) {
 
-            System.out.println(" Configuración inicial");
+            System.out.println("\n⚙ Configuracion inicial");
 
             System.out.print("Nombre de la sede: ");
-            String nombre = sc.nextLine();
+            String nombreSede = sc.nextLine();
 
-            System.out.print("Cantidad de salas médicas: ");
+            System.out.print("Salas medicas: ");
             int salas = sc.nextInt();
 
-            System.out.print("Cantidad de consultorios: ");
+            System.out.print("Consultorios: ");
             int consultorios = sc.nextInt();
 
-            System.out.print("Cantidad de emergencias: ");
+            System.out.print("Emergencias: ");
             int emergencias = sc.nextInt();
-            sc.nextLine(); // limpiar buffer
+            sc.nextLine();
 
-            String[] usuarios = {"garias", "mchaves", "kartavia"};
-            String[] passwords = {"70021", "50279", "80284"};
+            ListaUsuarios usuarios = new ListaUsuarios();
+                usuarios.agregar(
+                    new Usuario(
+                            "garias",
+                            "70021"));
+            
+                usuarios.agregar(
+                          new Usuario(
+                                  "mchaves",
+                                  "50279"));
 
-            Sede sede = new Sede(nombre, salas, consultorios, emergencias);
-            config = new Configuracion(sede, usuarios, passwords);
+                  usuarios.agregar(
+                          new Usuario(
+                                  "kartavia",
+                                  "80284"));
+
+            Sede sede = new Sede(nombreSede, salas, consultorios, emergencias);
+            cr.ac.ufidelitas.mediqueue.modulo1.Sala salaPreferencial =
+            new cr.ac.ufidelitas.mediqueue.modulo1.Sala(
+                    salas,
+                    "PREFERENCIAL");
+
+            cr.ac.ufidelitas.mediqueue.modulo1.Sala salaEmergencia =
+                    new cr.ac.ufidelitas.mediqueue.modulo1.Sala(
+                            salas + 1,
+                            "EMERGENCIA_CRITICA");
+
+            Consultorio consultorioPreferencial =
+                    new Consultorio(
+                            consultorios,
+                            "PREFERENCIAL",
+                            "GENERAL");
+
+            config = new Configuracion(sede,usuarios, salaPreferencial, salaEmergencia, consultorioPreferencial);
 
             configService.guardar(config);
 
-            System.out.println("Configuración guardada");
+            System.out.println("Configuracion guardada");
+
+        } else {
+
+            System.out.println("\nConfiguracion cargada");
+            System.out.println("Sede actual: " + config.getSede().getNombre());
+
+            System.out.print("¿Desea reconfigurar? (S/N): ");
+            String opc = sc.nextLine();
+
+            if (opc.equalsIgnoreCase("S")) {
+
+                System.out.print("Nombre de la sede: ");
+                String nombreSede = sc.nextLine();
+
+                System.out.print("Salas medicas: ");
+                int salas = sc.nextInt();
+
+                System.out.print("Consultorios: ");
+                int consultorios = sc.nextInt();
+
+                System.out.print("Emergencias: ");
+                int emergencias = sc.nextInt();
+                sc.nextLine();
+                
+                ListaUsuarios usuarios = new ListaUsuarios();
+                usuarios.agregar(
+                    new Usuario(
+                            "garias",
+                            "70021"));
+            
+                usuarios.agregar(
+                          new Usuario(
+                                  "mchaves",
+                                  "50279"));
+
+                  usuarios.agregar(
+                          new Usuario(
+                                  "kartavia",
+                                  "80284"));
+
+
+                Sede sede = new Sede(nombreSede, salas, consultorios, emergencias);
+                cr.ac.ufidelitas.mediqueue.modulo1.Sala salaPreferencial =
+                  new cr.ac.ufidelitas.mediqueue.modulo1.Sala(
+                          salas,
+                          "PREFERENCIAL");
+
+                  cr.ac.ufidelitas.mediqueue.modulo1.Sala salaEmergencia =
+                          new cr.ac.ufidelitas.mediqueue.modulo1.Sala(
+                                  salas + 1,
+                                  "EMERGENCIA_CRITICA");
+
+                  Consultorio consultorioPreferencial =
+                          new Consultorio(
+                                  consultorios,
+                                  "PREFERENCIAL",
+                                  "GENERAL");
+
+                  config = new Configuracion(sede, usuarios, salaPreferencial, salaEmergencia, consultorioPreferencial);
+
+                configService.guardar(config);
+
+                System.out.println("Configuracion actualizada");
+            }
         }
 
-        System.out.println("Configuración cargada");
-        System.out.println("Sede: " + config.getSede().getNombre());
+        // =====================================================
+        // LOGIN
+        // =====================================================
+        boolean autenticado = false;
+
+        while (!autenticado) {
+
+            System.out.println("\n=== LOGIN ===");
+
+            System.out.print("Usuario: ");
+            String user = sc.nextLine();
+
+            System.out.print("Password: ");
+            String pass = sc.nextLine();
+
+            if (Login.autenticar(user, pass, config)) {
+                System.out.println("Acceso concedido");
+                autenticado = true;
+            } else {
+                System.out.println("Credenciales incorrectas");
+            }
+        }
 
         // =====================================================
-        // MÓDULO 2 Registro de Pacientes → COLAS + PACIENTES
+        // MÓDULOS
         // =====================================================
-        GestorColas gestor = new GestorColas();
+        GestorColas gestorColas = new GestorColas();
+        gestorColas.cargarTodo();
 
-        // ✅ Cargar datos existentes
-        gestor.cargarTodo();
+        GestorAtencion gestorAtencion = new GestorAtencion(gestorColas);
+        GestorSalas gestorSalas = new GestorSalas();
 
         boolean salir = false;
 
         while (!salir) {
 
-            System.out.println("\n===== MENÚ =====");
-            System.out.println("1. Registrar Paciente");
-            System.out.println("2. Atender Paciente");
-            System.out.println("3. Salir");
-            System.out.print("Seleccione una opción: ");
+            System.out.println("\n========== MENU ==========");
+            System.out.println("1. Registrar paciente");
+            System.out.println("2. Enviar paciente a sala");
+            System.out.println("3. Atender paciente en sala");
+            System.out.println("4. Ver historial");
+            System.out.println("5. Ver estado de salas");
+            System.out.println("6. Salir");
+
+            System.out.print("Seleccione opcion: ");
 
             int opcion = sc.nextInt();
-            sc.nextLine(); // limpiar buffer
+            sc.nextLine();
 
             switch (opcion) {
 
                 // =====================================================
-                // 🟢 REGISTRAR PACIENTE
+                // REGISTRAR PACIENTE
                 // =====================================================
                 case 1:
+
+                    System.out.println("\n=== REGISTRO DE PACIENTE ===");
 
                     System.out.print("ID: ");
                     int id = sc.nextInt();
@@ -109,35 +211,81 @@ public class Main {
                     System.out.print("Nombre: ");
                     String nombre = sc.nextLine();
 
-                    System.out.print("Identificación: ");
-                    String identificacion = sc.nextLine();
+                    System.out.print("Identificacion: ");
+                    String cedula = sc.nextLine();
 
                     System.out.print("Edad: ");
                     int edad = sc.nextInt();
                     sc.nextLine();
 
-                    System.out.print("Tipo Seguro: ");
+                    System.out.print("Seguro (INS / CCSS): ");
                     String seguro = sc.nextLine();
+                    System.out.println("\nPrioridad médica:");
 
-                    System.out.print("Tipo Paciente (P/N): ");
-                    String tipoPacienteInput = sc.nextLine();
+                  System.out.println("1 - Critico");
+                  System.out.println("2 - Urgente");
+                  System.out.println("3 - Regular");
+                  System.out.println("4 - Control");
 
-                    System.out.print("Tipo Atención (C/S/E): ");
+                  System.out.print("Seleccione prioridad: ");
+
+                  int opcionPrioridad =
+                          Integer.parseInt(sc.nextLine());
+
+                  String prioridad = "Regular";
+
+                  switch (opcionPrioridad) {
+
+                      case 1:
+                          prioridad = "Critico";
+                          break;
+
+                      case 2:
+                          prioridad = "Urgente";
+                          break;
+
+                      case 3:
+                          prioridad = "Regular";
+                          break;
+
+                      case 4:
+                          prioridad = "Control";
+                          break;
+                  }
+
+                    System.out.println("\nTipo de paciente:");
+                    System.out.println("P - Preferencial");
+                    System.out.println("N - Normal");
+                    System.out.print("Seleccione (P/N): ");
+
+                    String tipoPaciente = sc.nextLine();
+
+                    System.out.println("\nTipo de atencion:");
+                    System.out.println("C - Consulta Externa");
+                    System.out.println("S - Sala / Salon");
+                    System.out.println("E - Emergencias");
+                    System.out.print("Seleccione (C/S/E): ");
+
                     String tipoAtencion = sc.nextLine();
 
                     Paciente paciente;
 
-                    // POLIMORFISMO
-                    if (tipoPacienteInput.equalsIgnoreCase("P")) {
-                        paciente = new PacientePreferencial(id, nombre, identificacion, edad, seguro);
+                    if (tipoPaciente.equalsIgnoreCase("P")) {
+                        paciente = new PacientePreferencial(id, nombre, cedula, edad, seguro);
                     } else {
-                        paciente = new PacienteNormal(id, nombre, identificacion, edad, seguro);
+                        paciente = new PacienteNormal(id, nombre, cedula, edad, seguro);
                     }
 
-                    // CREAR TIQUETE
-                    Tiquete tiquete = new Tiquete(paciente, tipoAtencion);
+                    Tiquete nuevo = new Tiquete(paciente, tipoAtencion, prioridad);
 
-                    gestor.registrarPaciente(tiquete);
+                    if (!nuevo.esValido()) {
+                        System.out.println("Datos invalidos");
+                        break;
+                    }
+
+                    gestorColas.registrarPaciente(nuevo);
+
+                    System.out.println("Paciente registrado en cola");
 
                     break;
 
@@ -146,28 +294,61 @@ public class Main {
                 // =====================================================
                 case 2:
 
-                    Tiquete siguiente = gestor.siguientePaciente();
+                    if (gestorColas.estaVacia()) {
+                        System.out.println("No hay pacientes en cola");
+                        break;
+                    }
 
-                    if (siguiente != null) {
-                        siguiente.atender();
-                        System.out.println("✅ Atendiendo paciente:");
-                        System.out.println(siguiente);
-                    } else {
-                        System.out.println("⚠ No hay pacientes en cola");
+                    Tiquete t = gestorColas.siguientePaciente();
+
+                    if (t != null) {
+                        gestorSalas.asignarPaciente(t);
                     }
 
                     break;
 
-                // =====================================================
-                // SALIR
-                // =====================================================
+              
                 case 3:
+
+                    if (gestorSalas.salasVacias()) {
+                        System.out.println("No hay pacientes en salas");
+                        break;
+                    }
+
+                    System.out.print("ID de Sala: ");
+                    int idSala = sc.nextInt();
+                    sc.nextLine();
+
+                    Tiquete atendido = gestorSalas.atenderYRetornar(idSala);
+
+                    if (atendido != null) {
+
+                        System.out.print("Nombre del medico: ");
+                        String medico = sc.nextLine();
+
+                        gestorAtencion.registrarConsulta(atendido, medico);
+                    }
+
+                    break;
+
+                case 4:
+
+                    gestorAtencion.mostrarHistorial();
+                    break;
+
+                case 5:
+
+                    gestorSalas.mostrarSalas();
+                    break;
+
+                case 6:
+
                     salir = true;
-                    System.out.println("👋 Cerrando sistema...");
+                    System.out.println("Sistema finalizado");
                     break;
 
                 default:
-                    System.out.println("❌ Opción inválida");
+                    System.out.println("Opcion invalida");
             }
         }
 

@@ -1,0 +1,18 @@
+{
+  "sede": {
+    "nombre": "a",
+    "salasMedicas": 1,
+    "consultorios": 1,
+    "emergencias": 2
+  },
+  "usuarios": [
+    "garias",
+    "mchaves",
+    "kartavia"
+  ],
+  "passwords": [
+    "70021",
+    "50279",
+    "80284"
+  ]
+}

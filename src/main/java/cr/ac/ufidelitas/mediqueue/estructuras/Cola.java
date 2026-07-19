@@ -2,9 +2,10 @@
 package cr.ac.ufidelitas.mediqueue.estructuras;
 
 /**
- * Implementación de Cola usando nodos
+ * Cola genérico para estructuras dinámicas
  * @param <T>
  */
+
 public class Cola<T> {
 
     private Nodo<T> frente;

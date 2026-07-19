@@ -1,16 +1,18 @@
 package cr.ac.ufidelitas.mediqueue.modulo1;
 
-public class Sala {
+public class Consultorio {
 
     private int id;
     private String tipo;
+    private String especialidad;
 
-    public Sala() {
+    public Consultorio() {
     }
 
-    public Sala(int id, String tipo) {
+    public Consultorio(int id, String tipo, String especialidad) {
         this.id = id;
         this.tipo = tipo;
+        this.especialidad = especialidad;
     }
 
     public int getId() {
@@ -21,11 +23,16 @@ public class Sala {
         return tipo;
     }
 
+    public String getEspecialidad() {
+        return especialidad;
+    }
+
     @Override
     public String toString() {
-        return "Sala{" +
+        return "Consultorio{" +
                 "id=" + id +
                 ", tipo='" + tipo + '\'' +
+                ", especialidad='" + especialidad + '\'' +
                 '}';
     }
 }

@@ -4,25 +4,47 @@ public class Configuracion {
 
     private Sede sede;
 
-    // Usuarios (temporal, luego JSON completo)
-    private String[] usuarios;
-    private String[] passwords;
+    private ListaUsuarios usuarios;
 
-    public Configuracion(Sede sede, String[] usuarios, String[] passwords) {
+    private Sala salaPreferencial;
+    private Sala salaEmergenciaCritica;
+
+    private Consultorio consultorioPreferencial;
+
+    public Configuracion() {
+    }
+
+    public Configuracion(
+            Sede sede,
+            ListaUsuarios usuarios,
+            Sala salaPreferencial,
+            Sala salaEmergenciaCritica,
+            Consultorio consultorioPreferencial) {
+
         this.sede = sede;
         this.usuarios = usuarios;
-        this.passwords = passwords;
+        this.salaPreferencial = salaPreferencial;
+        this.salaEmergenciaCritica = salaEmergenciaCritica;
+        this.consultorioPreferencial = consultorioPreferencial;
     }
 
     public Sede getSede() {
         return sede;
     }
 
-    public String[] getUsuarios() {
+    public ListaUsuarios getUsuarios() {
         return usuarios;
     }
 
-    public String[] getPasswords() {
-        return passwords;
+    public Sala getSalaPreferencial() {
+        return salaPreferencial;
+    }
+
+    public Sala getSalaEmergenciaCritica() {
+        return salaEmergenciaCritica;
+    }
+
+    public Consultorio getConsultorioPreferencial() {
+        return consultorioPreferencial;
     }
 }

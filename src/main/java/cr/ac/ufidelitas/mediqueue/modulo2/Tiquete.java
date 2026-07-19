@@ -1,54 +1,133 @@
 package cr.ac.ufidelitas.mediqueue.modulo2;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Tiquete {
 
+    // ============================================
+    // DATOS DEL PACIENTE
+    // ============================================
     private int id;
     private String nombre;
     private String identificacion;
     private int edad;
-    private String tipoSeguro;
+    private String seguro;
 
-    // CAMPOS DEL ENUNCIADO
-    private String prioridad;     // Critico, Urgente, Regular, Control
-    private String tipoAtencion;  // C, S, E
-    private String tipoPaciente;  // P o N
+    // ============================================
+    // DATOS DEL TIQUETE
+    // ============================================
+    private String fechaIngreso;
+    private String fechaAtencion;
 
-    private LocalDateTime fechaIngreso;
-    private LocalDateTime fechaAtencion;
+    private String prioridad;
+    private String tipoAtencion;
+    private String tipoPaciente;
 
-    // CONSTRUCTOR BASADO EN POLIMORFISMO (Paciente)
-    public Tiquete(Paciente paciente, String tipoAtencion) {
+    private static final DateTimeFormatter FORMATTER =
+            DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
-        this.id = paciente.id;
-        this.nombre = paciente.nombre;
-        this.identificacion = paciente.identificacion;
-        this.edad = paciente.edad;
-        this.tipoSeguro = paciente.tipoSeguro;
+    // Constructor vacío para Gson
+    public Tiquete() {
+    }
 
-        // desde polimorfismo
-        this.tipoPaciente = paciente.getTipoPaciente();
-        this.prioridad = mapearPrioridad(paciente.getNivelPrioridad());
+    public Tiquete(
+            Paciente paciente,
+            String tipoAtencion,
+            String prioridad) {
 
+        this.id = paciente.getId();
+        this.nombre = paciente.getNombre();
+        this.identificacion = paciente.getIdentificacion();
+        this.edad = paciente.getEdad();
+        this.seguro = paciente.getSeguro();
+
+        this.tipoPaciente = paciente.getTipo();
         this.tipoAtencion = tipoAtencion;
+        this.prioridad = prioridad;
 
-        // fechas automáticas
-        this.fechaIngreso = LocalDateTime.now();
-        this.fechaAtencion = null; // equivale a -1
+        this.fechaIngreso =
+                LocalDateTime.now().format(FORMATTER);
+
+        this.fechaAtencion = null;
     }
 
-    // MAPEO DE PRIORIDAD NUMÉRICA → TEXTO
-    private String mapearPrioridad(int nivel) {
-        switch (nivel) {
-            case 1: return "Critico";
-            case 2: return "Urgente";
-            case 3: return "Regular";
-            default: return "Control";
+    /**
+     * Marca el paciente como atendido
+     */
+    public void atender() {
+        this.fechaAtencion =
+                LocalDateTime.now().format(FORMATTER);
+    }
+
+    /**
+     * Valida información del tiquete
+     */
+    public boolean esValido() {
+
+        if (id <= 0) {
+            return false;
         }
+
+        if (nombre == null || nombre.isEmpty()) {
+            return false;
+        }
+
+        if (identificacion == null || identificacion.isEmpty()) {
+            return false;
+        }
+
+        if (edad <= 0) {
+            return false;
+        }
+
+        if (seguro == null || seguro.isEmpty()) {
+            return false;
+        }
+
+        if (tipoAtencion == null ||
+                !tipoAtencion.matches("[CSEcse]")) {
+            return false;
+        }
+
+        if (tipoPaciente == null ||
+                !tipoPaciente.matches("[PNpn]")) {
+            return false;
+        }
+
+        if (prioridad == null) {
+            return false;
+        }
+
+        return prioridad.equalsIgnoreCase("Critico")
+                || prioridad.equalsIgnoreCase("Urgente")
+                || prioridad.equalsIgnoreCase("Regular")
+                || prioridad.equalsIgnoreCase("Control");
     }
 
-    // GETTERS CLAVE (IMPORTANTE)
+    // ============================================
+    // GETTERS
+    // ============================================
+
+    public int getId() {
+        return id;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public String getIdentificacion() {
+        return identificacion;
+    }
+
+    public int getEdad() {
+        return edad;
+    }
+
+    public String getSeguro() {
+        return seguro;
+    }
 
     public String getPrioridad() {
         return prioridad;
@@ -62,54 +141,23 @@ public class Tiquete {
         return tipoPaciente;
     }
 
-    public LocalDateTime getFechaIngreso() {
+    public String getFechaIngreso() {
         return fechaIngreso;
     }
 
-    public LocalDateTime getFechaAtencion() {
+    public String getFechaAtencion() {
         return fechaAtencion;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    // VALIDACIÓN COMPLETA DEL ENUNCIADO
-    public boolean esValido() {
-
-        if (id <= 0) return false;
-        if (nombre == null || nombre.isEmpty()) return false;
-        if (identificacion == null || identificacion.isEmpty()) return false;
-        if (edad <= 0) return false;
-        if (tipoSeguro == null || tipoSeguro.isEmpty()) return false;
-
-        if (!prioridad.matches("Critico|Urgente|Regular|Control")) return false;
-        if (!tipoAtencion.matches("C|S|E")) return false;
-        if (!tipoPaciente.matches("P|N")) return false;
-
-        return true;
-    }
-
-    // MARCAR ATENCIÓN (para módulo 1.2)
-    public void atender() {
-        this.fechaAtencion = LocalDateTime.now();
-    }
-
-    // PRINT PARA DEBUG / DEFENSA
     @Override
     public String toString() {
+
         return "Tiquete{" +
                 "id=" + id +
                 ", nombre='" + nombre + '\'' +
                 ", prioridad='" + prioridad + '\'' +
-                ", tipoPaciente='" + tipoPaciente + '\'' +
-                ", tipoAtencion='" + tipoAtencion + '\'' +
-                ", fechaIngreso=" + fechaIngreso +
-                ", fechaAtencion=" + fechaAtencion +
+                ", ingreso='" + fechaIngreso + '\'' +
+                ", atencion='" + fechaAtencion + '\'' +
                 '}';
     }
 }

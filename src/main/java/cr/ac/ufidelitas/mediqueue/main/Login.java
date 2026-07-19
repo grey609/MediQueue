@@ -1,14 +1,19 @@
 package cr.ac.ufidelitas.mediqueue.main;
 
+import cr.ac.ufidelitas.mediqueue.modulo1.Configuracion;
+
 public class Login {
 
-    public static boolean autenticar(String usuario, String password) {
+    public static boolean autenticar(
+            String usuario,
+            String password,
+            Configuracion config) {
 
-        // Usuarios temporales (SIMULACIÓN)
-        if (usuario.equals("garias") && password.equals("70021")) return true;
-        if (usuario.equals("mchaves") && password.equals("50279")) return true;
-        if (usuario.equals("kartavia") && password.equals("80284")) return true;
+        if (config == null) {
+            return false;
+        }
 
-        return false;
+        return config.getUsuarios()
+                .validar(usuario, password);
     }
 }

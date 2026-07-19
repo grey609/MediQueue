@@ -1,20 +1,34 @@
 package cr.ac.ufidelitas.mediqueue.modulo2;
 
-public abstract class Paciente implements Priorizable {
+public abstract class Paciente {
 
     protected int id;
     protected String nombre;
     protected String identificacion;
     protected int edad;
-    protected String tipoSeguro;
+    protected String seguro; // INS / CCSS
 
-    public Paciente(int id, String nombre, String identificacion, int edad, String tipoSeguro) {
-        this.id = id;
-        this.nombre = nombre;
-        this.identificacion = identificacion;
-        this.edad = edad;
-        this.tipoSeguro = tipoSeguro;
+    // GETTERS (ENCAPSULAMIENTO)
+    public int getId() {
+        return id;
     }
 
-    public abstract String getTipoPaciente();
+    public String getNombre() {
+        return nombre;
+    }
+
+    public String getIdentificacion() {
+        return identificacion;
+    }
+
+    public int getEdad() {
+        return edad;
+    }
+
+    public String getSeguro() {
+        return seguro;
+    }
+
+    // POLIMORFISMO
+    public abstract String getTipo(); // P o N
 }
